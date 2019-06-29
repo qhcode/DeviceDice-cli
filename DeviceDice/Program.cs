@@ -85,6 +85,8 @@ namespace DeviceDice
     }
 
     //shamelessly stolen from StackOverflow 🙏 
+    //implements non-internationalized ordinals for ouput
+    //source: user samjudson on Aug 21 '08 -- https://stackoverflow.com/questions/20156/is-there-an-easy-way-to-create-ordinals-in-c
     class Ordinal
     {
         public static string AddOrdinal(int num)
