@@ -85,7 +85,7 @@ namespace DeviceDice
     }
 
     //shamelessly stolen from StackOverflow 🙏 
-    //implements non-internationalized ordinals for ouput
+    //implements non-internationalized ordinals for english culture numbers (TODO: Add .net libraries for culture-based ordinals)
     //source: user samjudson on Aug 21 '08 -- https://stackoverflow.com/questions/20156/is-there-an-easy-way-to-create-ordinals-in-c
     class Ordinal
     {
