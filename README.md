@@ -19,6 +19,8 @@
 
 3. Renames, refactors, optimizations
 
+4. Add the value of your dice
+
 <H3> Bonus Features </H3>
 
 1. Multiple branches for silly addons in order to play around with the git workflow 
