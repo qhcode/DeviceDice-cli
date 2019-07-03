@@ -1,4 +1,4 @@
-﻿<H1> Welcome to DeviceDice </H2>
+﻿<H1> DeviceDice-cli </H2>
 
 <p>The world's best dice roll console app. </p>
 
