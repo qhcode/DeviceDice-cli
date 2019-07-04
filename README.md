@@ -18,8 +18,8 @@
 <H2> Coming Soon </H2>
 
 1. Unit Tests via nUnit
-
-3. Renames, refactors, optimizations
+2. Renames, refactors, optimizations
+3. Add optional modifiers
 
 <H3> Bonus Features </H3>
 
