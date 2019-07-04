@@ -6,21 +6,23 @@ namespace DeviceDice
 {
 
 
-    //TODO: Define 'business logic' in a separate class (number of dice to play with, etc).
+    //TODO: Define 'business logic' in a separate class file (number of dice to play with, etc).
 
-    //TODO: Version 2: Make it so we can play with differing numbers of dice (e.g. diceboard with 3 d2 and 6 d12); we can take away and add dice of a specific type.
-    // Probably necessitates complete redesign.
+    //TODO: Version 2: Make it so we can play with multiple dice sides (e.g. diceboard with 3 d2 and 6 d12); we can take away and add dice of a specific type and roll them.
 
-    //TODO: Unit tests.
+    //TODO: Unit tests: check all validation points for out-of-bounds and type matching input
 
-    //TODO: added exception + exit everywhere when initializing the dice rolls just to experment - should remove them and put while loops in. Worth keeping for int.parse - would reject string values and silly values
-    // add validate for negative values?
+    //TODO: added exception + exit everywhere when initializing the dice rolls just to experment - should remove them (?) and put while loops in. 
+    //Worth keeping for int.parse? - would reject string values and silly -+32bit values
+
+    //TODO: add modifiers
 
     class DeviceDice
     {
         static void Main(string[] args)
 
         {
+            // welcome splash screen!
 
             // instantiate first set of dice
 
@@ -58,6 +60,8 @@ namespace DeviceDice
                 }
 
             }
+
+            // top-level loop for entire game
 
             Boolean playerWantsToPlay = true;
 
@@ -113,8 +117,6 @@ namespace DeviceDice
                     Console.WriteLine("\r\nThe " + Ordinal.AddOrdinal((i + 1)) + " die has a value of " + diceBoard[i].value + ".");
                 }
 
-                //print only if dice number > 1?
-
                 Console.WriteLine("\r\nThe sum of all dice is " + initialDiceValue + ".");
 
                 // while loop for rolling with modified number of dice
@@ -124,6 +126,8 @@ namespace DeviceDice
                 Boolean playerWantsToPlayWithCurrentDiceNumber = true;
                 
                 while (playerWantsToPlayWithCurrentDiceNumber) { 
+
+                    // roll loop logic. For simplicity's sake - modifier can be added here and not during the initial roll.
 
                     Boolean rollAgain = true;
 
@@ -168,6 +172,8 @@ namespace DeviceDice
 
                     }
 
+                    // add/subtract input validation
+
                     Console.WriteLine("\r\nSpecify whether to add or subtract dice, or exit. (add/subtract/exit)");
 
                     String[] addOrSubtractChoices = { "add", "subtract", "exit" };
@@ -204,9 +210,7 @@ namespace DeviceDice
                             Environment.Exit(1);
                         }
 
-                        // welcome to Off-by-one error city: adding or subtracting dice from the board
-
-                        //check value of current dice board, validated up until the business limit of no more than 10 dice (but at least 1)
+                        // welcome to Off-By-One City: logic for actually modifying the diceBoard array
 
                         while ((diceBoard.Length + valueToModifyDiceBoard) > 10 || (diceBoard.Length - valueToModifyDiceBoard) <= 0)
                         {
@@ -243,7 +247,7 @@ namespace DeviceDice
                                 newDiceValue += specificDice.value;
                             }
 
-                            Console.WriteLine("You added " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
+                            Console.WriteLine("\r\nYou added " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
 
                         }
 
@@ -257,7 +261,7 @@ namespace DeviceDice
                                 newDiceValue += specificDice.value;
                             }
 
-                            Console.WriteLine("You subtracted " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
+                            Console.WriteLine("\r\nYou subtracted " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
 
                         }
 
@@ -310,7 +314,7 @@ public class Dice
 }
 
     //shamelessly stolen from StackOverflow 🙏 
-    //implements non-internationalized ordinals for english culture numbers (TODO: Add .net libraries for culture-based ordinals)
+    //implements non-internationalized ordinals for english culture numbers
     //source: user samjudson on Aug 21 '08 -- https://stackoverflow.com/questions/20156/is-there-an-easy-way-to-create-ordinals-in-c
 class Ordinal
 {
