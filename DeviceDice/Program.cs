@@ -15,7 +15,7 @@ namespace DeviceDice
     //TODO: added exception + exit everywhere when initializing the dice rolls just to experment - should remove them (?) and put while loops in. 
     //Worth keeping for int.parse? - would reject string values and silly -+32bit values
 
-    //TODO: add modifiers
+    // change to create a new branch
 
     class DeviceDice
     {
@@ -212,7 +212,7 @@ namespace DeviceDice
 
                         // welcome to Off-By-One City: logic for actually modifying the diceBoard array
 
-                        while ((diceBoard.Length + valueToModifyDiceBoard) > 10 || (diceBoard.Length - valueToModifyDiceBoard) <= 0)
+                        while ((diceBoard.Length + valueToModifyDiceBoard) > 10 || (diceBoard.Length - valueToModifyDiceBoard) < 0)
                         {
                             Console.WriteLine("You can only have between 1 and 10 dice. Please chose a proper value.");
 
