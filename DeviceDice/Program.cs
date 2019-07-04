@@ -8,18 +8,25 @@ namespace DeviceDice
 
     //TODO: Define 'business logic' in a separate class (number of dice to play with, etc).
 
-    //TODO: Version 2: Make it so we can play with differing numbers of dice (e.g. diceboard with 3 d2 and 6 d12); we can take away and add dice of a specific type. Probably necessitates complete redesign.
+    //TODO: Version 2: Make it so we can play with differing numbers of dice (e.g. diceboard with 3 d2 and 6 d12); we can take away and add dice of a specific type.
+    // Probably necessitates complete redesign.
 
     //TODO: Unit tests.
+
+    //TODO: added exception + exit everywhere when initializing the dice rolls just to experment - should remove them and put while loops in. Worth keeping for int.parse - would reject string values and silly values
+    // add validate for negative values?
 
     class DeviceDice
     {
         static void Main(string[] args)
+
         {
 
-            Console.WriteLine("How many sides do you need on your dice? Acceptable values are 2, 4, 6, 8, 10, 12, or 20.");
+            // instantiate first set of dice
 
-            int[] acceptableDiceSideValuesArray = { 2, 4, 6, 8, 10, 12, 20 };
+            Console.WriteLine("How many sides do you need on your dice? Acceptable values are 4, 6, 8, 10, 12, or 20.");
+
+            int[] acceptableDiceSideValuesArray = { 4, 6, 8, 10, 12, 20 };
 
             int diceSides = 0;
 
@@ -88,11 +95,15 @@ namespace DeviceDice
                     }
                 }
 
+                int initialDiceValue = 0;
+
                 Dice[] diceBoard = new Dice[numberOfPlayerDice];
 
                 for (int i = 0; i < numberOfPlayerDice; i++)
                 {
                     diceBoard[i] = new Dice(diceSides);
+
+                    initialDiceValue += diceBoard[i].value;
                 }
 
                 Console.WriteLine("\r\nYou now have " + numberOfPlayerDice + " beautiful dice, all lined up in a row. You stare at them in awe:");
@@ -102,46 +113,164 @@ namespace DeviceDice
                     Console.WriteLine("\r\nThe " + Ordinal.AddOrdinal((i + 1)) + " die has a value of " + diceBoard[i].value + ".");
                 }
 
-                Boolean RollAgain = true;
+                //print only if dice number > 1?
 
-                while (RollAgain)
-                {
+                Console.WriteLine("\r\nThe sum of all dice is " + initialDiceValue + ".");
 
-                    Console.WriteLine("\r\nYou roll your beautiful dice.");
+                // while loop for rolling with modified number of dice
 
-                    foreach (Dice specficDice in diceBoard)
+                // logic for rolling again
+
+                Boolean playerWantsToPlayWithCurrentDiceNumber = true;
+                
+                while (playerWantsToPlayWithCurrentDiceNumber) { 
+
+                    Boolean rollAgain = true;
+
+                    while (rollAgain)
                     {
-                        specficDice.Roll();
+                    
+                        Console.WriteLine("\r\nYou roll your beautiful dice.");
+
+                        int allDiceValueForRoll = 0;
+
+                        foreach (Dice specficDice in diceBoard)
+                        {
+                            specficDice.Roll();
+
+                            allDiceValueForRoll += specficDice.value;
+                        }
+
+                        Console.WriteLine("\r\nYou stare at your marvelous dice again. Through the magic of physics, they've changed.");
+
+                        for (int i = 0; i < diceBoard.Length; i++)
+                        {
+                            Console.WriteLine("\r\nThe " + Ordinal.AddOrdinal((i + 1)) + " die has a value of " + diceBoard[i].value + ".");
+                        }
+
+                        //print only if dice number > 1?
+
+                        Console.WriteLine("\r\nThe sum of all dice is now " + allDiceValueForRoll + ".");
+
+                        Console.WriteLine("\r\nRoll again? (y/n)");
+
+                        String rollAgainConfirmation = Console.ReadLine();
+
+                        while(!((rollAgainConfirmation == "y") || (rollAgainConfirmation == "n"))) {
+
+                            Console.WriteLine("Invalid Input, please specify whether or not your want to roll again. (y/n)");
+
+                            rollAgainConfirmation = Console.ReadLine();
+
+                        }
+
+                        if (rollAgainConfirmation == "n") { break; }
+
                     }
 
-                    Console.WriteLine("\r\nYou stare at your marvelous dice again. Through the magic of physics, they've changed.");
+                    Console.WriteLine("\r\nSpecify whether to add or subtract dice, or exit. (add/subtract/exit)");
 
-                    for (int i = 0; i < diceBoard.Length; i++)
+                    String[] addOrSubtractChoices = { "add", "subtract", "exit" };
+
+                    String addOrSubtractConfirmation = "";
+
+                    addOrSubtractConfirmation = Console.ReadLine();
+
+                    while (!addOrSubtractChoices.Contains(addOrSubtractConfirmation))
                     {
-                        Console.WriteLine("\r\nThe " + Ordinal.AddOrdinal((i + 1)) + " die has a value of " + diceBoard[i].value + ".");
-                    }
 
-                    Console.WriteLine("Roll again? (y/n)");
+                        Console.WriteLine("Invalid Input. Please specify whether to add or subtract dice, or exit. (add/subtract/exit)");
 
-                    String rollAgainConfirmation = Console.ReadLine();
-
-                    while(!((rollAgainConfirmation == "y") || (rollAgainConfirmation == "n"))) {
-
-                        Console.WriteLine("Invalid Input, please specify whether or not your want to roll again (y/n)");
-
-                        rollAgainConfirmation = Console.ReadLine();
+                        addOrSubtractConfirmation = Console.ReadLine();
 
                     }
 
-                    if (rollAgainConfirmation == "n") { break; }
+                    int valueToModifyDiceBoard = 0;
+
+                    if (addOrSubtractConfirmation == "add" || addOrSubtractConfirmation == "subtract")
+                    {
+
+                        Console.WriteLine("\r\nBy how much? You currently have " + diceBoard.Length + " dice.");
+
+                        try
+                        {
+                            // need validation for specifying invalid numbers.
+                            valueToModifyDiceBoard = int.Parse(Console.ReadLine());
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Invalid input." + e);
+
+                            Environment.Exit(1);
+                        }
+
+                        // welcome to Off-by-one error city: adding or subtracting dice from the board
+
+                        //check value of current dice board, validated up until the business limit of no more than 10 dice (but at least 1)
+
+                        while ((diceBoard.Length + valueToModifyDiceBoard) > 10 || (diceBoard.Length - valueToModifyDiceBoard) <= 0)
+                        {
+                            Console.WriteLine("You can only have between 1 and 10 dice. Please chose a proper value.");
+
+                            try
+                            {
+                                valueToModifyDiceBoard = int.Parse(Console.ReadLine());
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Invalid input." + e);
+
+                                Environment.Exit(1);
+                            }
+                        }
+
+                        int originalDiceBoardLength = diceBoard.Length;
+
+                        int newDiceValue = 0;
+
+                        if (addOrSubtractConfirmation == "add")
+                        {
+
+                            Array.Resize(ref diceBoard, (diceBoard.Length + valueToModifyDiceBoard));
+
+                            for (int i = originalDiceBoardLength; i < diceBoard.Length; i++)
+                            {
+                                diceBoard[i] = new Dice(diceSides);
+                            }
+
+                            foreach (Dice specificDice in diceBoard)
+                            {
+                                newDiceValue += specificDice.value;
+                            }
+
+                            Console.WriteLine("You added " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
+
+                        }
+
+                        if (addOrSubtractConfirmation == "subtract")
+                        {
+
+                            Array.Resize(ref diceBoard, (diceBoard.Length - valueToModifyDiceBoard));
+
+                            foreach (Dice specificDice in diceBoard)
+                            {
+                                newDiceValue += specificDice.value;
+                            }
+
+                            Console.WriteLine("You subtracted " + valueToModifyDiceBoard + " and now have " + diceBoard.Length + " dice, with a total sum of " + newDiceValue + ".");
+
+                        }
+
+
+                    }
+
+                    if (addOrSubtractConfirmation == "exit") { break; }
 
                 }
 
-                //Use Array.Resize ability to add & subtract number of dice in array.
-
                 // exit loop and close game
 
-                Console.WriteLine("Play again soon!");
+                Console.WriteLine("\r\nPlay again soon!");
 
                 playerWantsToPlay = false;
 
