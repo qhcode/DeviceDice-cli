@@ -1,6 +1,6 @@
 ﻿<H1> DeviceDice-cli </H2>
 
-<p>The world's best dice roll console app. </p>
+The world's best dice roll console app.
 
 <H2>Features</H2>
 
@@ -15,13 +15,20 @@
  
  5. Decide to add/subtract dice from the game
   
-<H2> Coming Soon </H2>
+<H2> Remaining features for Version 1 </H2>
 
 1. Unit Tests via nUnit
+
 2. Renames, refactors, optimizations -- use standard .net libraries for ordinals
-3. Add optional modifiers
+
+3. Add optional roll modifiers for dnd & other nefarious purposes
+
 4. beautiful SPLASH SCREEN
 
-<H3> Bonus Features </H3>
+<H2> Introducing: Version 2 </H2>
 
-1. Multiple branches for silly addons in order to play around with the git workflow 
+1. hosted app
+
+2. less procedural; input with options
+
+3. hash table storage
