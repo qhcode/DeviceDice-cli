@@ -20,6 +20,7 @@
 1. Unit Tests via nUnit
 2. Renames, refactors, optimizations -- use standard .net libraries for ordinals
 3. Add optional modifiers
+4. beautiful SPLASH SCREEN
 
 <H3> Bonus Features </H3>
 
