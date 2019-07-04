@@ -18,7 +18,7 @@
 <H2> Coming Soon </H2>
 
 1. Unit Tests via nUnit
-2. Renames, refactors, optimizations
+2. Renames, refactors, optimizations -- use standard .net libraries for ordinals
 3. Add optional modifiers
 
 <H3> Bonus Features </H3>
