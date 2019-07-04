@@ -11,15 +11,15 @@
 3. roll your wonderful dice
   * you can even roll it again, in fact as many times as you want
   
+ 4. Get the sum value of your dice printed at all points in the workflow
+ 
+ 5. Decide to add/subtract dice from the game
+  
 <H2> Coming Soon </H2>
 
 1. Unit Tests via nUnit
 
-2. Decide to add/subtract dice from the player's hand
-
 3. Renames, refactors, optimizations
-
-4. Add the value of your dice
 
 <H3> Bonus Features </H3>
 
