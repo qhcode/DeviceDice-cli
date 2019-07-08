@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Drawing;
+using Console = Colorful.Console;
 
 namespace DeviceDice
 {
 
 
-    //TODO: Define 'business logic' in a separate class file (number of dice to play with, etc).
+    //TODO: Define 'business logic' in a separate classs file (number of dice to play with, etc).
 
     //TODO: Version 2: Make it so we can play with multiple dice sides (e.g. diceboard with 3 d2 and 6 d12); we can take away and add dice of a specific type and roll them.
+    // can extend to multiple dice types by converting from array to dictionary
 
     //TODO: Unit tests: check all validation points for out-of-bounds and type matching input
+    // create a few classes to do this.
 
     //TODO: added exception + exit everywhere when initializing the dice rolls just to experment - should remove them (?) and put while loops in. 
     //Worth keeping for int.parse? - would reject string values and silly -+32bit values
@@ -22,11 +26,20 @@ namespace DeviceDice
         static void Main(string[] args)
 
         {
-            // welcome splash screen!
 
-            // instantiate first set of dice
+            Boolean playerWantsToPlay = true;
 
-            Console.WriteLine("How many sides do you need on your dice? Acceptable values are 4, 6, 8, 10, 12, or 20.");
+            while (playerWantsToPlay == true)
+            {
+
+                //
+                //
+                //
+                // instantiate first set of dice
+
+            Console.WriteAscii("DeviceDice", Color.Red);
+
+            Console.WriteLine("\r\nHow many sides do you need on your dice? Acceptable values are 4, 6, 8, 10, 12, or 20.");
 
             int[] acceptableDiceSideValuesArray = { 4, 6, 8, 10, 12, 20 };
 
@@ -60,13 +73,6 @@ namespace DeviceDice
                 }
 
             }
-
-            // top-level loop for entire game
-
-            Boolean playerWantsToPlay = true;
-
-            while (playerWantsToPlay == true)
-            {
 
                 Console.WriteLine("How many dice do you want to roll? Acceptable values are 1-10.");
 
@@ -110,6 +116,57 @@ namespace DeviceDice
                     initialDiceValue += diceBoard[i].value;
                 }
 
+                Console.WriteLine("Set a roll modifier? (y/n)");
+
+                String useRollModifier = Console.ReadLine();
+
+                while (!(useRollModifier == "y" || useRollModifier == "n"))
+                {
+                    Console.WriteLine("Please enter a proper value.");
+
+                    useRollModifier = Console.ReadLine();
+                }
+
+                int rollModifier = 0;
+
+                if (useRollModifier == "y")
+                {
+                    Console.WriteLine("Enter a modifier value greater than 0.");
+
+                    try
+                    {
+                        rollModifier = int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Invalid input." + e);
+
+                        Environment.Exit(1);
+                    }
+
+                    while (rollModifier <= 0)
+                    {
+                        Console.Write("Please enter a value greater than 0");
+
+                        try
+                        {
+                            rollModifier = int.Parse(Console.ReadLine());
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Invalid input." + e);
+
+                            Environment.Exit(1);
+                        }
+
+                    }
+
+                }
+
+                if (useRollModifier == "n") { Console.WriteLine("No modifier used."); }
+
+                // Print initial dice values
+
                 Console.WriteLine("\r\nYou now have " + numberOfPlayerDice + " beautiful dice, all lined up in a row. You stare at them in awe:");
 
                 for (int i = 0; i < diceBoard.Length; i++)
@@ -117,7 +174,12 @@ namespace DeviceDice
                     Console.WriteLine("\r\nThe " + Ordinal.AddOrdinal((i + 1)) + " die has a value of " + diceBoard[i].value + ".");
                 }
 
-                Console.WriteLine("\r\nThe sum of all dice is " + initialDiceValue + ".");
+                Console.WriteLine("\r\nThe sum of all dice values are " + initialDiceValue + ".");
+
+                if (useRollModifier == "y")
+                {
+                    Console.WriteLine("\r\nWith a roll modfier of " + rollModifier + ", your dice roll has a value of " + (initialDiceValue + rollModifier) + ".");
+                }
 
                 // while loop for rolling with modified number of dice
 
@@ -156,6 +218,11 @@ namespace DeviceDice
 
                         Console.WriteLine("\r\nThe sum of all dice is now " + allDiceValueForRoll + ".");
 
+                        if (useRollModifier == "y")
+                        {
+                            Console.WriteLine("\r\nWith a roll modfier of " + rollModifier  + ", your dice roll has a value of " + (allDiceValueForRoll + rollModifier) + ".");
+                        }
+
                         Console.WriteLine("\r\nRoll again? (y/n)");
 
                         String rollAgainConfirmation = Console.ReadLine();
@@ -174,9 +241,9 @@ namespace DeviceDice
 
                     // add/subtract input validation
 
-                    Console.WriteLine("\r\nSpecify whether to add or subtract dice, or exit. (add/subtract/exit)");
+                    Console.WriteLine("\r\nSpecify whether to add or subtract dice, change the roll modifier, or exit. (add/subtract/modifier/exit)");
 
-                    String[] addOrSubtractChoices = { "add", "subtract", "exit" };
+                    String[] addOrSubtractChoices = { "add", "subtract", "modifier", "exit" };
 
                     String addOrSubtractConfirmation = "";
 
@@ -185,7 +252,7 @@ namespace DeviceDice
                     while (!addOrSubtractChoices.Contains(addOrSubtractConfirmation))
                     {
 
-                        Console.WriteLine("Invalid Input. Please specify whether to add or subtract dice, or exit. (add/subtract/exit)");
+                        Console.WriteLine("Invalid Input. Please specify whether to add or subtract dice, or exit. (add/subtract/modifier/exit)");
 
                         addOrSubtractConfirmation = Console.ReadLine();
 
@@ -210,30 +277,39 @@ namespace DeviceDice
                             Environment.Exit(1);
                         }
 
-                        // welcome to Off-By-One City: logic for actually modifying the diceBoard array
-
-                        while ((diceBoard.Length + valueToModifyDiceBoard) > 10 || (diceBoard.Length - valueToModifyDiceBoard) < 0)
+                        if (valueToModifyDiceBoard < 0)
                         {
-                            Console.WriteLine("You can only have between 1 and 10 dice. Please chose a proper value.");
 
-                            try
-                            {
-                                valueToModifyDiceBoard = int.Parse(Console.ReadLine());
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine("Invalid input." + e);
+                            Console.WriteLine("A negative number, eh? Don't mind if I convert your input to an absolute number.");
 
-                                Environment.Exit(1);
-                            }
+                            valueToModifyDiceBoard = Math.Abs(valueToModifyDiceBoard);
+
                         }
+
+                        // welcome to Off-By-One City: logic for actually modifying the diceBoard array
 
                         int originalDiceBoardLength = diceBoard.Length;
 
                         int newDiceValue = 0;
 
                         if (addOrSubtractConfirmation == "add")
+
                         {
+                            while ((diceBoard.Length + valueToModifyDiceBoard) > 10)
+                            {
+                                Console.WriteLine("You can only have between 1 and 10 dice. Please chose a proper value.");
+
+                                try
+                                {
+                                    valueToModifyDiceBoard = int.Parse(Console.ReadLine());
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Invalid input." + e);
+
+                                    Environment.Exit(1);
+                                }
+                            }
 
                             Array.Resize(ref diceBoard, (diceBoard.Length + valueToModifyDiceBoard));
 
@@ -253,6 +329,21 @@ namespace DeviceDice
 
                         if (addOrSubtractConfirmation == "subtract")
                         {
+                            while ((diceBoard.Length - valueToModifyDiceBoard) < 1)
+                            {
+                                Console.WriteLine("You can only have between 1 and 10 dice. Please chose a proper value.");
+
+                                try
+                                {
+                                    valueToModifyDiceBoard = int.Parse(Console.ReadLine());
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Invalid input." + e);
+
+                                    Environment.Exit(1);
+                                }
+                            }
 
                             Array.Resize(ref diceBoard, (diceBoard.Length - valueToModifyDiceBoard));
 
@@ -265,6 +356,68 @@ namespace DeviceDice
 
                         }
 
+                    }
+
+                    if (addOrSubtractConfirmation == "modifier")
+                    {
+                        Console.WriteLine("\r\nAdd a modifier, change your modifier, stop using a roll modifier, or exit (add/change/stop/exit)");
+
+                        String modifierChoice = Console.ReadLine();
+
+                        String[] modifyRollModifier = { "add", "change", "stop", "exit" };
+
+                        while (!modifyRollModifier.Contains(modifierChoice))
+                        {
+                            Console.WriteLine("Please chose a valid input (change/stopmodifier/exit)");
+
+                            modifierChoice = Console.ReadLine();
+                        }
+
+                        if (modifierChoice == "add")
+                        {
+                            Console.WriteLine("\r\nYou're now playing with a roll modifier.");
+
+                            useRollModifier = "y";
+
+                            modifierChoice = "change";
+                        }
+
+                        if (modifierChoice == "change")
+                        {
+
+                            Console.WriteLine("\r\nInput a value for the dice modifier greater than 0.");
+
+                            try
+                            {
+                                rollModifier = int.Parse(Console.ReadLine());
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Invalid input." + e);
+
+                                Environment.Exit(1);
+                            }
+
+                            while (rollModifier <= 0)
+                            {
+                                Console.Write("Please enter a value greater than 0.");
+
+                                try
+                                {
+                                    rollModifier = int.Parse(Console.ReadLine());
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Invalid input." + e);
+
+                                    Environment.Exit(1);
+                                }
+
+                            }
+
+                        }
+
+                        if (modifierChoice == "stop") { Console.WriteLine("\r\nYou stop using a dice modifier."); useRollModifier = "n"; rollModifier = 0; }
 
                     }
 
@@ -272,13 +425,11 @@ namespace DeviceDice
 
                 }
 
-                // exit loop and close game
-
                 Console.WriteLine("\r\nPlay again soon!");
 
                 playerWantsToPlay = false;
 
-            }
+            }            
 
         }
 
@@ -345,3 +496,11 @@ class Ordinal
     }
 
 }
+
+
+//class DiceGame
+//{
+//    public Guid SessionId {get;}
+//    public String[] CurrentDiceBoard;
+
+//}
