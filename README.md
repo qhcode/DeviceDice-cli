@@ -14,16 +14,16 @@ The world's best dice roll console app.
  4. Get the sum value of your dice printed at all points in the workflow
  
  5. Decide to add/subtract dice from the game
+ 
+ 6. beautiful SPLASH SCREEN
   
 <H2> Remaining features for Version 1 </H2>
 
-1. Unit Tests via nUnit
+1. Unit Tests via xUnit
 
 2. Renames, refactors, optimizations -- use standard .net libraries for ordinals
 
 3. Add optional roll modifiers for dnd & other nefarious purposes
-
-4. beautiful SPLASH SCREEN
 
 <H2> Introducing: Version 2 </H2>
 
